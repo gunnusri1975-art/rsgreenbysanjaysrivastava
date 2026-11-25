@@ -64,25 +64,25 @@ export function Navbar() {
       {/* Frosted Blurred Header — Always Pinned & Visible at Top While Scrolling */}
       <nav
         aria-label="Primary Navigation"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between gap-4"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between gap-3 sm:gap-4"
       >
         <a
           href="#home"
           onClick={handleNavClick}
-          className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-md"
+          className="flex items-center gap-2.5 sm:gap-3 min-w-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-md"
         >
-          <span className="h-11 sm:h-12 px-2 py-1 rounded-lg bg-white border border-white/80 flex items-center justify-center shrink-0 shadow-sm">
+          <span className="h-10 sm:h-12 px-1.5 sm:px-2 py-1 rounded-lg bg-white border border-white/80 flex items-center justify-center shrink-0 shadow-sm">
             <img
               src={brandLogo}
               alt={`${SITE_BRAND.name} Logo`}
               className="h-full w-auto object-contain"
             />
           </span>
-          <div className="leading-tight">
-            <span className="block font-display font-extrabold tracking-tight text-white text-base sm:text-lg">
+          <div className="leading-tight min-w-0">
+            <span className="block font-display font-extrabold tracking-tight text-white text-sm sm:text-lg whitespace-nowrap">
               {SITE_BRAND.name}
             </span>
-            <span className="block text-[11px] font-medium text-white/80">
+            <span className="block text-[11px] font-medium text-white/85 whitespace-nowrap">
               {SITE_BRAND.advisorRole}:{' '}
               <strong className="font-semibold text-gold-soft">{SITE_BRAND.advisorName}</strong>
             </span>
@@ -102,14 +102,14 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* Single Clean WhatsApp CTA + Mobile Menu Toggle */}
-        <div className="flex items-center gap-2.5">
+        {/* Desktop WhatsApp CTA + Mobile Menu Toggle */}
+        <div className="flex items-center gap-2.5 shrink-0">
           <a
             href={PRIMARY_CONTACT.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackOptionalMetaContact('whatsapp', PRIMARY_CONTACT.display)}
-            className="btn-clean inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-leaf hover:bg-leaf-soft text-white text-xs sm:text-sm font-semibold border border-white/20"
+            className="btn-clean hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-leaf hover:bg-leaf-soft text-white text-xs sm:text-sm font-semibold border border-white/20"
           >
             <WhatsAppIcon className="w-4 h-4 shrink-0 text-gold-soft" />
             <span>WhatsApp</span>

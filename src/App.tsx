@@ -134,7 +134,7 @@ export function App() {
     <div ref={rootRef} className="min-h-screen bg-white text-charcoal">
       <Navbar />
 
-      <main>
+      <main className="overflow-x-clip">
         <Hero />
         <PropertyOverview />
         <PropertyFeatures />

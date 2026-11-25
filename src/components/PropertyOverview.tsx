@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { OVERVIEW_IMAGES, OVERVIEW_METRICS } from '../data/propertyData';
 
@@ -10,53 +9,12 @@ const OVERVIEW_POINTS = [
 ] as const;
 
 export function PropertyOverview() {
-  const metricsRef = useRef<HTMLDivElement>(null);
-  const [maxSqYd, setMaxSqYd] = useState(1200);
-
-  useEffect(() => {
-    const el = metricsRef.current;
-    if (!el) return;
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    let frameId = 0;
-    let triggered = false;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting && !triggered) {
-          triggered = true;
-          const start = performance.now();
-          const duration = 900;
-          const animate = (now: number) => {
-            const progress = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setMaxSqYd(Math.round(50 + (1200 - 50) * eased));
-            if (progress < 1) {
-              frameId = requestAnimationFrame(animate);
-            }
-          };
-          frameId = requestAnimationFrame(animate);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.35 },
-    );
-
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      if (frameId) cancelAnimationFrame(frameId);
-    };
-  }, []);
-
   return (
-    <section id="about" className="py-16 sm:py-24 bg-white">
+    <section id="about" className="py-14 sm:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          {/* Left: Clean Architectural Photo Grid (1 Wide Feature + 1 4:3 Detail + Highlight Card) */}
-          <div className="lg:col-span-6 space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          {/* Left: Clean Architectural Photo Grid */}
+          <div className="lg:col-span-6 min-w-0 space-y-4">
             <div className="anim-slide-left card-lift rounded-xl overflow-hidden border border-ivory-border shadow-card bg-white">
               <div className="aspect-[16/10] w-full overflow-hidden bg-ivory-warm">
                 <img
@@ -66,13 +24,13 @@ export function PropertyOverview() {
                   className="w-full h-full object-cover object-center hover:scale-[1.03] transition-transform duration-700 ease-out"
                 />
               </div>
-              <div className="px-4 py-2.5 bg-white border-t border-ivory-border flex items-center justify-between text-xs">
+              <div className="px-4 py-2.5 bg-white border-t border-ivory-border flex flex-col sm:flex-row sm:items-center justify-between gap-0.5 sm:gap-2 text-xs">
                 <span className="font-semibold text-forest-deep">Wide RCC &amp; Paved Roads</span>
                 <span className="text-charcoal-muted">40 ft, 30 ft, 25 ft &amp; 22 ft Widths</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 items-stretch">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 items-stretch">
               <div className="anim-slide-left card-lift rounded-xl overflow-hidden border border-ivory-border shadow-card bg-ivory-warm">
                 <div className="aspect-[4/3] w-full overflow-hidden">
                   <img
@@ -98,7 +56,7 @@ export function PropertyOverview() {
           </div>
 
           {/* Right: Editorial Overview Copy */}
-          <div className="lg:col-span-6 anim-slide-right">
+          <div className="lg:col-span-6 min-w-0 anim-slide-right">
             <span className="block text-xs font-semibold uppercase tracking-widest text-gold-dark">
               Property Overview
             </span>
@@ -143,18 +101,15 @@ export function PropertyOverview() {
           </div>
         </div>
 
-        {/* Distinct Sapphire-Slate & Warm-Brass Key Facts Strip */}
-        <div
-          ref={metricsRef}
-          className="anim-fade-up card-lift mt-14 grid grid-cols-2 lg:grid-cols-4 rounded-xl divide-y sm:divide-y-0 sm:divide-x divide-white/15 bg-[#0B2642] text-white shadow-elevated"
-        >
-          {OVERVIEW_METRICS.map((metric, idx) => (
-            <div key={metric.label} className="p-5 sm:p-6">
-              <span className="block text-xs font-semibold uppercase tracking-wider text-[#D7B983]">
+        {/* Distinct Sapphire-Slate & Warm-Brass Key Facts Strip (Clean 2x2 & 4x1 Grid Borders) */}
+        <div className="anim-fade-up card-lift mt-12 sm:mt-14 grid grid-cols-2 lg:grid-cols-4 gap-px rounded-xl overflow-hidden bg-white/15 border border-[#0B2642] shadow-elevated">
+          {OVERVIEW_METRICS.map((metric) => (
+            <div key={metric.label} className="bg-[#0B2642] text-white p-4 sm:p-6">
+              <span className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#D7B983]">
                 {metric.label}
               </span>
-              <span className="block mt-1 font-display font-bold text-base sm:text-lg text-white tabular-nums">
-                {idx === 0 ? `50 – ${maxSqYd.toLocaleString('en-IN')} Sq. Yards` : metric.value}
+              <span className="block mt-1 font-display font-bold text-sm sm:text-lg text-white">
+                {metric.value}
               </span>
             </div>
           ))}

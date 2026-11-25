@@ -25,9 +25,9 @@ export function LocationAdvantage() {
       className="py-16 sm:py-24 bg-[#F5F0E6] border-y border-[#E6DEC9]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           {/* Left: Located in New Greater Kanpur + Nearby Connectivity */}
-          <div className="lg:col-span-5 anim-slide-left">
+          <div className="lg:col-span-5 min-w-0 anim-slide-left">
             <span className="block text-xs font-semibold uppercase tracking-widest text-[#8C6D3F]">
               Located in New Greater Kanpur
             </span>
@@ -98,7 +98,7 @@ export function LocationAdvantage() {
           </div>
 
           {/* Right: Clean Embedded Google Map */}
-          <div className="lg:col-span-7 anim-slide-right">
+          <div className="lg:col-span-7 min-w-0 anim-slide-right">
             <div className="card-lift rounded-xl overflow-hidden bg-white border border-[#E6DEC9] shadow-elevated">
               <div className="aspect-[4/3] sm:aspect-[16/10] w-full bg-ivory-cream">
                 <iframe

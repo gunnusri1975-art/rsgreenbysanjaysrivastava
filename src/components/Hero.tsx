@@ -26,10 +26,10 @@ export function Hero() {
         className="absolute inset-0 bg-gradient-to-r from-[#061A30]/95 via-[#092848]/88 to-[#0E3C68]/72 pointer-events-none"
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-20">
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: RS GREEN CITY + Clean Advisor Attribution + CTAs */}
-          <div className="lg:col-span-6 text-white">
+          <div className="lg:col-span-6 min-w-0 text-white">
             <div className="anim-hero-text inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-gold-soft tracking-wide">
               <MapPin className="w-4 h-4 shrink-0" />
               <span>{SITE_BRAND.locationShort}</span>
@@ -71,7 +71,7 @@ export function Hero() {
             </div>
 
             {/* Larger, Balanced Senior Advisor Attribution */}
-            <div className="anim-hero-text mt-8 pt-6 border-t border-white/20 flex items-center justify-between gap-4 max-w-lg">
+            <div className="anim-hero-text mt-8 pt-6 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-lg">
               <div className="flex items-center gap-4 min-w-0">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-gold-soft/85 bg-white/10 shrink-0 shadow-md">
                   <img
@@ -84,7 +84,7 @@ export function Hero() {
                   <span className="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-gold-soft">
                     {SITE_BRAND.advisorRole}
                   </span>
-                  <span className="block font-display font-extrabold text-xl sm:text-2xl text-white truncate">
+                  <span className="block font-display font-extrabold text-xl sm:text-2xl text-white">
                     {SITE_BRAND.advisorName}
                   </span>
                 </div>
@@ -92,7 +92,7 @@ export function Hero() {
 
               <a
                 href="#advisor"
-                className="shrink-0 text-xs sm:text-sm font-semibold text-white hover:text-gold-soft transition-colors px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/25"
+                className="self-start sm:self-auto shrink-0 text-xs sm:text-sm font-semibold text-white hover:text-gold-soft transition-colors px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/25"
               >
                 Meet Advisor &rarr;
               </a>
@@ -100,7 +100,7 @@ export function Hero() {
           </div>
 
           {/* Right Column: Sharp Main Site Photograph & Crisp Architectural Metrics */}
-          <div className="lg:col-span-6 anim-hero-card">
+          <div className="lg:col-span-6 min-w-0 anim-hero-card">
             <div className="card-lift rounded-xl overflow-hidden bg-white shadow-elevated">
               <div className="relative aspect-[16/11] w-full overflow-hidden bg-stone-100">
                 <img

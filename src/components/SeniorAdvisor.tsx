@@ -28,9 +28,9 @@ export function SeniorAdvisor() {
     <section id="advisor" className="py-16 sm:py-24 bg-[#FAF7F0]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="anim-scale-in card-lift rounded-xl bg-[#132920] text-white border border-[#244A3A] p-6 sm:p-10 shadow-elevated">
-          <div className="grid md:grid-cols-12 gap-8 lg:gap-10 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 items-center">
             {/* Clean Portrait Framing */}
-            <div className="md:col-span-4 flex justify-center">
+            <div className="md:col-span-4 min-w-0 flex justify-center">
               <div className="w-52 sm:w-56 aspect-[3/4] rounded-xl overflow-hidden bg-white border-2 border-[#C9A66B]/70 shadow-card">
                 <img
                   src={ADVISOR_IMAGE.src}
@@ -42,7 +42,7 @@ export function SeniorAdvisor() {
             </div>
 
             {/* Advisor Information & Single Clean Action Pair */}
-            <div className="md:col-span-8">
+            <div className="md:col-span-8 min-w-0">
               <span className="block text-xs font-semibold uppercase tracking-widest text-[#D7B983]">
                 Senior Advisor
               </span>

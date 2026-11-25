@@ -28,8 +28,8 @@ export function SiteWalkthroughAndMap() {
       {/* 1. Cool Slate-Sky Video Section — Clean, No Blurred Background Image */}
       <section id="walkthrough" className="py-16 sm:py-24 bg-[#ECF2F7] border-y border-[#D6E1EC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            <div className="lg:col-span-7 anim-slide-left">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            <div className="lg:col-span-7 min-w-0 anim-slide-left">
               <div className="card-lift rounded-xl overflow-hidden bg-black border border-[#CBD8E6] shadow-elevated">
                 <video
                   src={SITE_VIDEO.src}
@@ -51,7 +51,7 @@ export function SiteWalkthroughAndMap() {
               </p>
             </div>
 
-            <div className="lg:col-span-5 anim-slide-right">
+            <div className="lg:col-span-5 min-w-0 anim-slide-right">
               <span className="block text-xs font-semibold uppercase tracking-widest text-[#125282]">
                 Site Video Proof
               </span>
