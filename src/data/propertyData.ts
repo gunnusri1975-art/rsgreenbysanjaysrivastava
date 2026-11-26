@@ -38,28 +38,112 @@ export const ADVISOR_IMAGE = {
   alt: 'Sanjay Srivastava, Senior Advisor for RS GREEN CITY',
 };
 
-export const SITE_VIDEO = {
-  src: `${import.meta.env.BASE_URL}videos/rs-green-city-highway-walkthrough.mp4`,
-  poster: mainAvenueImg,
-  durationLabel: '1 min 44 sec',
-  chapters: [
-    {
-      time: '0:00 – 0:12',
-      title: 'Direct Turn from Naubasta–Hamirpur Highway',
-      detail: 'Shows live highway traffic turning directly onto the project approach road.',
-    },
-    {
-      time: '0:13 – 0:31',
-      title: 'Approach Road to Main Entrance Gate',
-      detail: 'Wide approach avenue lined with boundary walls leading straight to the gate.',
-    },
-    {
-      time: '0:32 – 1:44',
-      title: 'Internal RCC Roads & Site Development',
-      detail: 'Walkthrough of laid RCC roads, drainage, water tank, electricity poles, and ongoing construction.',
-    },
-  ],
-} as const;
+export interface SiteVideoChapter {
+  time: string;
+  title: string;
+  detail: string;
+}
+
+export interface SiteVideoItem {
+  id: 'shambhua-entrance' | 'shambhua-inside' | 'bidhnu-site';
+  tabLabel: string;
+  siteTag: string;
+  title: string;
+  description: string;
+  src: string;
+  poster?: string;
+  durationLabel: string;
+  caption: string;
+  chapters: readonly SiteVideoChapter[];
+}
+
+export const SITE_VIDEOS: readonly SiteVideoItem[] = [
+  {
+    id: 'shambhua-entrance',
+    tabLabel: 'Shambhua: Entrance Gate',
+    siteTag: 'Shambhua Site · NH-86 Kanpur–Sagar Highway',
+    title: 'Shambhua Site — Highway Frontage & Entrance Gate',
+    description:
+      'See the direct NH-86 (Kanpur–Sagar Highway) frontage opening onto the Shambhua main entrance gate, guard room structure, and twin 40 ft entrance corridor.',
+    src: `${import.meta.env.BASE_URL}videos/shambhua-entrance-gate.mp4`,
+    durationLabel: '31 sec',
+    caption:
+      'Unedited on-site clip (31 sec) showing the Shambhua main entrance gate directly off NH-86 Highway.',
+    chapters: [
+      {
+        time: '0:00 – 0:15',
+        title: 'NH-86 Highway Frontage & Main Gate',
+        detail: 'Shows live highway connectivity opening onto the gated entrance arch and guard room.',
+      },
+      {
+        time: '0:15 – 0:31',
+        title: '90 ft Dual-Lane Entrance Corridor',
+        detail: 'View inside the gate showing twin 40 ft roads divided by a 10 ft planted green belt.',
+      },
+    ],
+  },
+  {
+    id: 'shambhua-inside',
+    tabLabel: 'Shambhua: Inside Site',
+    siteTag: 'Shambhua Site · Inside Walkthrough',
+    title: 'Shambhua Site — Internal Layout & Amenity Zones',
+    description:
+      'Walk inside the Shambhua township showing the 90 ft divided main road, landscaped green belt, park boundary work, and upcoming school and water park zones.',
+    src: `${import.meta.env.BASE_URL}videos/shambhua-inside-walkthrough.mp4`,
+    durationLabel: '2 min 31 sec',
+    caption:
+      'Full internal walkthrough (2 min 31 sec) covering internal development inside our Shambhua site.',
+    chapters: [
+      {
+        time: '0:00 – 0:46',
+        title: 'Main Gate View, Green Belt & School Zone',
+        detail: 'Inside look at the entrance gate, landscaped median, and planned school sector.',
+      },
+      {
+        time: '0:47 – 1:25',
+        title: 'Park Boundary & Street-Light Provisioning',
+        detail: 'Walkthrough past the walled community park with underground street-light wiring conduits.',
+      },
+      {
+        time: '1:26 – 2:31',
+        title: '90 ft Divided Avenue & Water Park Zone',
+        detail: 'Shows twin 40 ft carriageways (90 ft overall corridor) leading toward the planned water park area.',
+      },
+    ],
+  },
+  {
+    id: 'bidhnu-site',
+    tabLabel: 'Bidhnu Site: Walkthrough',
+    siteTag: 'Bidhnu Site · Naubasta–Hamirpur Highway',
+    title: 'Bidhnu Site — Highway Approach & RCC Roads',
+    description:
+      'See the real drive directly off the Naubasta–Hamirpur Highway onto our Bidhnu site approach road, through the entrance gate, and across completed RCC roads.',
+    src: `${import.meta.env.BASE_URL}videos/rs-green-city-highway-walkthrough.mp4`,
+    poster: mainAvenueImg,
+    durationLabel: '1 min 45 sec',
+    caption:
+      'Unedited site walkthrough (1 min 45 sec) showing the highway turn-off and RCC roads at our Bidhnu site.',
+    chapters: [
+      {
+        time: '0:00 – 0:12',
+        title: 'Direct Turn from Naubasta–Hamirpur Highway',
+        detail: 'Shows live highway traffic turning directly onto the Bidhnu site approach road.',
+      },
+      {
+        time: '0:13 – 0:31',
+        title: 'Approach Road to Main Entrance Gate',
+        detail: 'Wide approach avenue lined with boundary walls leading straight to the gate.',
+      },
+      {
+        time: '0:32 – 1:45',
+        title: 'Internal RCC Roads & Site Development',
+        detail: 'Walkthrough of laid RCC roads, drainage, water tank, electricity poles, and ongoing construction.',
+      },
+    ],
+  },
+];
+
+export const SITE_VIDEO = SITE_VIDEOS[0];
 
 export interface LayoutPlanItem {
   id: 'master' | 'rs-block' | 'rs1-phase1' | 'phase1' | 'd-block';

@@ -1,11 +1,189 @@
-import { useEffect, useState } from 'react';
-import { Expand, FileDown, Play, X } from 'lucide-react';
-import { LAYOUT_PLANS, SITE_VIDEO, type LayoutPlanItem } from '../data/propertyData';
+import { useEffect, useRef, useState } from 'react';
+import { Expand, FileDown, Film, Maximize2, Minimize2, Pause, Play, X } from 'lucide-react';
+import {
+  LAYOUT_PLANS,
+  SITE_VIDEOS,
+  type LayoutPlanItem,
+  type SiteVideoItem,
+} from '../data/propertyData';
+
+function formatVideoTime(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
+  const total = Math.floor(seconds);
+  const mins = Math.floor(total / 60);
+  const secs = total % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function SilentVideoPlayer({ video }: { video: SiteVideoItem }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const lockMute = (el: HTMLVideoElement | null) => {
+    if (!el) return;
+    el.muted = true;
+    el.volume = 0;
+  };
+
+  useEffect(() => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+  }, [video.id]);
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === containerRef.current);
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+  }, []);
+
+  const togglePlay = () => {
+    const el = videoRef.current;
+    if (!el) return;
+    lockMute(el);
+    if (el.paused || el.ended) {
+      void el.play();
+    } else {
+      el.pause();
+    }
+  };
+
+  const handleSeek = (nextTime: number) => {
+    const el = videoRef.current;
+    if (!el) return;
+    el.currentTime = nextTime;
+    setCurrentTime(nextTime);
+  };
+
+  const toggleFullscreen = async () => {
+    const container = containerRef.current;
+    if (!container) return;
+    try {
+      if (document.fullscreenElement === container) {
+        await document.exitFullscreen();
+      } else if (container.requestFullscreen) {
+        await container.requestFullscreen();
+      }
+    } catch {
+      // Ignore fullscreen rejection if blocked by browser policy.
+    }
+  };
+
+  const progressPercent = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative group card-lift rounded-xl overflow-hidden bg-black border border-[#CBD8E6] shadow-elevated select-none"
+    >
+      <video
+        ref={videoRef}
+        key={video.id}
+        src={video.src}
+        poster={video.poster}
+        muted
+        playsInline
+        preload="metadata"
+        disablePictureInPicture
+        onContextMenu={(e) => e.preventDefault()}
+        onClick={togglePlay}
+        onLoadedMetadata={(e) => {
+          lockMute(e.currentTarget);
+          setDuration(e.currentTarget.duration || 0);
+        }}
+        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+        onPlay={(e) => {
+          lockMute(e.currentTarget);
+          setIsPlaying(true);
+        }}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => setIsPlaying(false)}
+        onVolumeChange={(e) => {
+          if (!e.currentTarget.muted || e.currentTarget.volume !== 0) {
+            lockMute(e.currentTarget);
+          }
+        }}
+        className={`w-full bg-black cursor-pointer ${
+          isFullscreen ? 'h-full object-contain' : 'aspect-video object-contain'
+        }`}
+      >
+        Your browser does not support HTML5 video playback.
+      </video>
+
+      {!isPlaying && (
+        <button
+          type="button"
+          onClick={togglePlay}
+          aria-label={`Play ${video.tabLabel}`}
+          className="absolute inset-0 m-auto w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#0A2942]/85 hover:bg-[#0A2942] text-white border border-white/30 shadow-lg flex items-center justify-center transition-transform hover:scale-105"
+        >
+          <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-0.5 text-gold-soft" />
+        </button>
+      )}
+
+      {/* Custom Player Controls — Play/Pause, Seek & Fullscreen Only (No Volume Button) */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent px-3 sm:px-4 pt-6 pb-2.5 flex items-center gap-2.5 sm:gap-3">
+        <button
+          type="button"
+          onClick={togglePlay}
+          aria-label={isPlaying ? 'Pause video' : 'Play video'}
+          className="p-1.5 rounded-md bg-white/15 hover:bg-white/25 text-white transition-colors shrink-0"
+        >
+          {isPlaying ? (
+            <Pause className="w-4 h-4 fill-current" />
+          ) : (
+            <Play className="w-4 h-4 fill-current" />
+          )}
+        </button>
+
+        <input
+          type="range"
+          min={0}
+          max={duration || 0}
+          step={0.1}
+          value={currentTime}
+          aria-label="Seek video progress"
+          onChange={(e) => handleSeek(Number(e.target.value))}
+          style={{
+            background: `linear-gradient(to right, #D7B983 ${progressPercent}%, rgba(255,255,255,0.28) ${progressPercent}%)`,
+          }}
+          className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-[#D7B983]"
+        />
+
+        <span className="text-[11px] sm:text-xs font-medium text-white/90 tabular-nums shrink-0">
+          {formatVideoTime(currentTime)} / {formatVideoTime(duration)}
+        </span>
+
+        <button
+          type="button"
+          onClick={() => void toggleFullscreen()}
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen video'}
+          className="p-1.5 rounded-md bg-white/15 hover:bg-white/25 text-white transition-colors shrink-0"
+        >
+          {isFullscreen ? (
+            <Minimize2 className="w-4 h-4" />
+          ) : (
+            <Maximize2 className="w-4 h-4" />
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function SiteWalkthroughAndMap() {
+  const [activeVideoId, setActiveVideoId] = useState<SiteVideoItem['id']>('shambhua-entrance');
   const [activePlanId, setActivePlanId] = useState<LayoutPlanItem['id']>('master');
   const [zoomOpen, setZoomOpen] = useState(false);
 
+  const activeVideo =
+    SITE_VIDEOS.find((video) => video.id === activeVideoId) ?? SITE_VIDEOS[0];
   const activePlan =
     LAYOUT_PLANS.find((plan) => plan.id === activePlanId) ?? LAYOUT_PLANS[0];
 
@@ -25,52 +203,78 @@ export function SiteWalkthroughAndMap() {
 
   return (
     <>
-      {/* 1. Cool Slate-Sky Video Section — Clean, No Blurred Background Image */}
+      {/* 1. Cool Slate-Sky Video Section — Clean Switcher Across Shambhua & Bidhnu Videos */}
       <section id="walkthrough" className="py-16 sm:py-24 bg-[#ECF2F7] border-y border-[#D6E1EC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-8 border-b border-[#D6E1EC]">
+            <div>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#125282]">
+                <Film className="w-3.5 h-3.5" />
+                <span>Site Video Proof · Shambhua &amp; Bidhnu</span>
+              </span>
+              <h2 className="mt-2 font-display font-bold tracking-tight text-[#0A2942] text-3xl sm:text-4xl leading-tight">
+                Real Site Walkthrough Videos
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap gap-2" role="tablist" aria-label="Choose site video">
+              {SITE_VIDEOS.map((video) => {
+                const isActive = video.id === activeVideo.id;
+                return (
+                  <button
+                    key={video.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActiveVideoId(video.id)}
+                    className={`inline-flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+                      isActive
+                        ? 'bg-[#0A2942] text-white shadow-sm'
+                        : 'bg-white text-[#0A2942] border border-[#CBD8E6] hover:border-[#0A2942]/40 hover:bg-white/90'
+                    }`}
+                  >
+                    <span>{video.tabLabel}</span>
+                    <span
+                      className={`text-[11px] font-medium px-1.5 py-0.5 rounded ${
+                        isActive ? 'bg-white/15 text-gold-soft' : 'bg-[#ECF2F7] text-[#125282]'
+                      }`}
+                    >
+                      {video.durationLabel}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 min-w-0 anim-slide-left">
-              <div className="card-lift rounded-xl overflow-hidden bg-black border border-[#CBD8E6] shadow-elevated">
-                <video
-                  src={SITE_VIDEO.src}
-                  poster={SITE_VIDEO.poster}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="w-full aspect-video bg-black"
-                >
-                  Your browser does not support HTML5 video playback.
-                </video>
-              </div>
+              <SilentVideoPlayer video={activeVideo} />
               <p className="mt-3 text-xs text-charcoal-muted flex items-center gap-2">
                 <Play className="w-3.5 h-3.5 text-[#8C6D3F] shrink-0" />
-                <span>
-                  Unedited site walkthrough ({SITE_VIDEO.durationLabel}) — tap play to watch the
-                  direct turn-off from Naubasta–Hamirpur Highway.
-                </span>
+                <span>{activeVideo.caption}</span>
               </p>
             </div>
 
             <div className="lg:col-span-5 min-w-0 anim-slide-right">
               <span className="block text-xs font-semibold uppercase tracking-widest text-[#125282]">
-                Site Video Proof
+                {activeVideo.siteTag}
               </span>
-              <h2 className="mt-2 font-display font-bold tracking-tight text-[#0A2942] text-3xl sm:text-4xl leading-tight">
-                Highway Approach &amp; Site Walkthrough
-              </h2>
+              <h3 className="mt-2 font-display font-bold tracking-tight text-[#0A2942] text-2xl sm:text-3xl leading-tight">
+                {activeVideo.title}
+              </h3>
               <p className="mt-3 text-sm sm:text-base text-charcoal-muted leading-relaxed">
-                See the real drive directly off the Naubasta–Hamirpur Highway onto the project
-                approach road, through the entrance gate, and across the internal RCC roads.
+                {activeVideo.description}
               </p>
 
               <div className="mt-6 space-y-3">
-                {SITE_VIDEO.chapters.map((chapter) => (
+                {activeVideo.chapters.map((chapter) => (
                   <div
                     key={chapter.time}
                     className="card-lift p-4 rounded-lg bg-white border border-[#D6E1EC] shadow-sm"
                   >
                     <span className="text-xs font-bold text-[#125282]">{chapter.time}</span>
-                    <h3 className="mt-0.5 text-sm font-bold text-charcoal">{chapter.title}</h3>
+                    <h4 className="mt-0.5 text-sm font-bold text-charcoal">{chapter.title}</h4>
                     <p className="mt-0.5 text-xs sm:text-sm text-charcoal-muted">
                       {chapter.detail}
                     </p>

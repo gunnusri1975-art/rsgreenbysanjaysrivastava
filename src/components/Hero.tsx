@@ -114,7 +114,7 @@ export function Hero() {
                   className="btn-clean absolute bottom-3.5 left-3.5 inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#061A30]/90 hover:bg-[#061A30] text-white text-xs font-semibold backdrop-blur-sm border border-white/15"
                 >
                   <Play className="w-3.5 h-3.5 fill-current text-gold-soft" />
-                  <span>Watch Highway-to-Site Video</span>
+                  <span>Watch Site Walkthrough Videos</span>
                 </a>
               </div>
 
